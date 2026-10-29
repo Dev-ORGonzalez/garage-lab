@@ -1,18 +1,19 @@
-import { AUTO, Game, Scale } from 'phaser';
+import '@fontsource/lilita-one';
+import '@fontsource/nunito/600.css';
+import '@fontsource/nunito/800.css';
 import './style.css';
-import { BootScene } from './scenes/BootScene';
-import { MenuScene } from './scenes/MenuScene';
+import { showMenu } from './ui/Menu';
+import { GarageView } from './game/GarageView';
 
-// Configuración principal del juego
-new Game({
-  type: AUTO,
-  parent: 'app',
-  width: 1280,
-  height: 720,
-  backgroundColor: '#071a45',
-  scale: {
-    mode: Scale.FIT, // se adapta a cualquier pantalla sin deformarse
-    autoCenter: Scale.CENTER_BOTH,
-  },
-  scene: [BootScene, MenuScene],
-});
+const app = document.getElementById('app')!;
+const worldEl = document.createElement('div');
+worldEl.id = 'world';
+app.appendChild(worldEl);
+
+async function startGarage(): Promise<void> {
+  // Esperamos la tipografía para que el rótulo del taller se dibuje con ella
+  await document.fonts.load('64px "Lilita One"').catch(() => undefined);
+  new GarageView(worldEl, () => menu.classList.remove('hidden'));
+}
+
+const menu = showMenu(() => startGarage());
